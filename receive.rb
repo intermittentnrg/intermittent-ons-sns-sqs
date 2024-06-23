@@ -15,6 +15,7 @@ loop do
     wait_time_seconds: 0 # Do not wait to check for the message.
   })
   receive_message_result.messages.each do |message|
+    receipt_handles << message.receipt_handle
     body = message.body
     json = JSON.parse(body)
 
@@ -31,7 +32,8 @@ loop do
     puts path
 
     paths << path
-    receipt_handles << message.receipt_handle
+  rescue JSON::ParserError
+    puts $!
   end
   break if receive_message_result.messages.length <10
 end
